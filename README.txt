@@ -1,0 +1,45 @@
+## 💾 Habilidades Técnicas
+
+📊 **Ferramentas de Visualização de Dados** (Power BI, Qlik Sense e outros): `3`  
+🐍 **Manipulação e Tratamento de Dados com Python**: `6`  
+⚡ **Manipulação e Tratamento de Dados com PySpark**: `4`  
+☁️ **Desenvolvimento de Data Workflows no Azure com Databricks**: `1`  
+🛠️ **Desenvolvimento de Data Workflows com Airflow**: `2`  
+🗃️ **Manipulação de Bases de Dados NoSQL**: `5`  
+🌐 **Web Crawling e Web Scraping para Mineração de Dados**: `5`  
+🔗 **Construção de APIs (REST, SOAP e Microservices)**: `6`  
+
+
+
+📂 Estruturação do Armazenamento dos Dados
+
+Este documento descreve a estrutura de armazenamento dos dados e a escolha das tecnologias Data Lake, SQL e NoSQL (MongoDB).
+Como não foi estruturado inicialmente se necessariamente seria em apenas um banco de dados, minha sugestão seria:
+
+📌 Tecnologias Utilizadas
+
+🏞️ Data Lake
+
+O DataLake seria utilizado para armazenar dados brutos e pré-processados com intuito de preservar a integridade dos dados caso seja 
+necessário reprocessamentos futuros. Além de permitir guardar um grande volume de dados processados e pré-processados, ele preserva a integridade dos dados
+caso seja necessário um reprocessamento futuro. 
+Além disso, por suportar diversor formatos como CSV e JSON, o consumo dos dados e a utilização em linguagens como Python acaba sendo facilitado para usos futuros 
+dos dados armazenados.
+
+🗄️ SQL (Banco Relacional)
+
+O SQL seria utilizado para armazenar dados estruturados e permitir consultas otimizadas para análise e BI (Power BI e Tableau), pois a modelagem relacional
+facilita a consistência e integridade dos dados além de permitir consultas avançadas e ter uma ótima otimização de desempenho. Além disso, ter os dados estruturados
+no SQL é vantajoso graças as transações ACID que garantem confiabilidade nos dados.
+
+📜 NoSQL (MongoDB)
+
+O MongoDB será utilizado para armazenar dados que não possuem um esquema rígido, permitindo flexibilidade e escalabilidade. Como ele utiliza um modelo baseado 
+em documentos JSON, é ideal para armazenar informações semiestruturadas e dinâmicas, como logs de eventos, metadados e dados que podem variar em formato ao longo do tempo.
+Outra vantagem de se utilizar o NoSQL seria por causa da sua escalabilidade horizontal que facilita o armazenamento e a recuperação de dados sem comprometer o desempenho.
+
+🚀 Conclusão
+
+A combinação de Data Lake, SQL e NoSQL permite uma abordagem híbrida e eficiente para armazenamento, análise e recuperação de dados, garantindo escalabilidade, flexibilidade e confiabilidade para os diferentes tipos de informação do projeto.
+Porém, para o projeto, sugiro armazenar os dados brutos no Data Lake, já que a fonte de dados não tem um formato fixo. Para os dados de atracação e carga tratados (após o ETL), armazenar no SQL Server (nas tabelas atracacao_fato e carga_fato) 
+é a melhor escolha devido à necessidade de consultas eficientes.
