@@ -4,7 +4,7 @@
 Este projeto implementa um processo ETL (Extract, Transform, Load) utilizando **PySpark** para processar dados portuários armazenados em arquivos TXT e inseri-los em um banco de dados **SQL Server**. O objetivo é facilitar a análise e gestão de dados de atracação e carga de portos brasileiros.
 
 ## Tecnologias Utilizadas
-- **Python 3.x**
+- **Python 3.12.2**
 - **PySpark** (para processamento distribuído de dados)
 - **pyodbc** (para conexão com SQL Server)
 - **dotenv** (para carregamento de variáveis de ambiente)
