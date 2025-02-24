@@ -1,49 +1,77 @@
-Q1 - Arquivo README.txt
-Q2A - filter_data.ipynb
-Q2B - query.sql
+# ETL de Dados Portuários com PySpark e SQL Server
 
-## 💾 Habilidades Técnicas
+## Descrição
+Este projeto implementa um processo ETL (Extract, Transform, Load) utilizando **PySpark** para processar dados portuários armazenados em arquivos TXT e inseri-los em um banco de dados **SQL Server**. O objetivo é facilitar a análise e gestão de dados de atracação e carga de portos brasileiros.
 
-📊 **Ferramentas de Visualização de Dados** (Power BI, Qlik Sense e outros): `3`  
-🐍 **Manipulação e Tratamento de Dados com Python**: `6`  
-⚡ **Manipulação e Tratamento de Dados com PySpark**: `4`  
-☁️ **Desenvolvimento de Data Workflows no Azure com Databricks**: `1`  
-🛠️ **Desenvolvimento de Data Workflows com Airflow**: `2`  
-🗃️ **Manipulação de Bases de Dados NoSQL**: `5`  
-🌐 **Web Crawling e Web Scraping para Mineração de Dados**: `5`  
-🔗 **Construção de APIs (REST, SOAP e Microservices)**: `6`  
+## Tecnologias Utilizadas
+- **Python 3.x**
+- **PySpark** (para processamento distribuído de dados)
+- **pyodbc** (para conexão com SQL Server)
+- **dotenv** (para carregamento de variáveis de ambiente)
+- **SQL Server** (armazenamento dos dados processados)
 
+## Configuração do Ambiente
+Antes de executar o projeto, certifique-se de configurar as seguintes variáveis de ambiente no arquivo `.env`:
+```ini
+DRIVER_NAME=Nome_do_Driver_SQL_Server
+SERVER_NAME=Nome_do_Servidor
+DATABASE_NAME=Nome_do_Banco_de_Dados
+TRUSTED_CONNECTION=yes
+```
 
+## Instalação das Dependências
+Instale as dependências necessárias utilizando o pip:
+```bash
+pip install pyspark pyodbc python-dotenv
+```
 
-📂 Estruturação do Armazenamento dos Dados
+## Estrutura do Código
+O código está estruturado em funções modulares para facilitar a reutilização e a manutenção.
 
-Este documento descreve a estrutura de armazenamento dos dados e a escolha das tecnologias Data Lake, SQL e NoSQL (MongoDB).
-Como não foi estruturado inicialmente se necessariamente seria em apenas um banco de dados, minha sugestão seria:
+### 1. Carregamento do Arquivo TXT
+A função **carregar_arquivo_txt** carrega um arquivo TXT delimitado por ponto e vírgula (;) e transforma os dados em um **DataFrame do Spark**.
+```python
+def carregar_arquivo_txt(arquivo: str) -> DataFrame:
+    df = spark.read.option("delimiter", ";").csv(arquivo, header=True, inferSchema=True)
+    return df
+```
 
-📌 Tecnologias Utilizadas
+### 2. Inserção de Dados na Tabela `atracacao_fato`
+A função **inserir_atracacao** processa os dados de atracação e os insere na tabela `atracacao_fato` do SQL Server.
+```python
+def inserir_atracacao(df_atracao: DataFrame) -> None:
+    for row in df_atracao.collect():
+        cursor.execute("INSERT INTO atracacao_fato (...) VALUES (?, ?, ...)", ...)
+        conn.commit()
+```
 
-🏞️ Data Lake
+### 3. Inserção de Dados na Tabela `carga_fato`
+A função **inserir_carga** processa os dados de carga e os insere na tabela `carga_fato` do SQL Server.
+```python
+def inserir_carga(df_carga: DataFrame) -> None:
+    for row in df_carga.collect():
+        cursor.execute("INSERT INTO carga_fato (...) VALUES (?, ?, ...)", ...)
+        conn.commit()
+```
 
-O DataLake seria utilizado para armazenar dados brutos e pré-processados com intuito de preservar a integridade dos dados caso seja 
-necessário reprocessamentos futuros. Além de permitir guardar um grande volume de dados processados e pré-processados, ele preserva a integridade dos dados
-caso seja necessário um reprocessamento futuro. 
-Além disso, por suportar diversor formatos como CSV e JSON, o consumo dos dados e a utilização em linguagens como Python acaba sendo facilitado para usos futuros 
-dos dados armazenados.
+## Execução do ETL
+1. Carregue os dados a partir de um arquivo TXT:
+   ```python
+   df_atracao = carregar_arquivo_txt("dados_atracao.txt")
+   df_carga = carregar_arquivo_txt("dados_carga.txt")
+   ```
 
-🗄️ SQL (Banco Relacional)
+2. Insira os dados processados no SQL Server:
+   ```python
+   inserir_atracacao(df_atracao)
+   inserir_carga(df_carga)
+   ```
 
-O SQL seria utilizado para armazenar dados estruturados e permitir consultas otimizadas para análise e BI (Power BI e Tableau), pois a modelagem relacional
-facilita a consistência e integridade dos dados além de permitir consultas avançadas e ter uma ótima otimização de desempenho. Além disso, ter os dados estruturados
-no SQL é vantajoso graças as transações ACID que garantem confiabilidade nos dados.
+## Observações
+- Certifique-se de que o banco de dados **SQL Server** esteja configurado corretamente e acessível.
+- Verifique se as tabelas **atracacao_fato** e **carga_fato** já estão criadas no banco de dados.
+- Os dados são transformados antes da inserção para garantir consistência e formato adequado.
 
-📜 NoSQL (MongoDB)
+## Autor
+Desenvolvido por Cainã Moura.
 
-O MongoDB será utilizado para armazenar dados que não possuem um esquema rígido, permitindo flexibilidade e escalabilidade. Como ele utiliza um modelo baseado 
-em documentos JSON, é ideal para armazenar informações semiestruturadas e dinâmicas, como logs de eventos, metadados e dados que podem variar em formato ao longo do tempo.
-Outra vantagem de se utilizar o NoSQL seria por causa da sua escalabilidade horizontal que facilita o armazenamento e a recuperação de dados sem comprometer o desempenho.
-
-🚀 Conclusão
-
-A combinação de Data Lake, SQL e NoSQL permite uma abordagem híbrida e eficiente para armazenamento, análise e recuperação de dados, garantindo escalabilidade, flexibilidade e confiabilidade para os diferentes tipos de informação do projeto.
-Porém, para o projeto, sugiro armazenar os dados brutos no Data Lake, já que a fonte de dados não tem um formato fixo. Para os dados de atracação e carga tratados (após o ETL), armazenar no SQL Server (nas tabelas atracacao_fato e carga_fato) 
-é a melhor escolha devido à necessidade de consultas eficientes.
