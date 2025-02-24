@@ -1,3 +1,7 @@
+Q1 - Arquivo README.txt
+Q2A - filter_data.ipynb
+Q2B - query.sql
+
 ## 💾 Habilidades Técnicas
 
 📊 **Ferramentas de Visualização de Dados** (Power BI, Qlik Sense e outros): `3`  
